@@ -1,0 +1,39 @@
+package discreteinference;
+
+import java.util.List;
+
+import com.maxeler.maxcompiler.v2.kernelcompiler.KernelLib;
+import com.maxeler.maxcompiler.v2.kernelcompiler.stdlib.memory.Memory;
+import com.maxeler.maxcompiler.v2.kernelcompiler.types.base.DFEType;
+import com.maxeler.maxcompiler.v2.kernelcompiler.types.base.DFEVar;
+import com.maxeler.maxcompiler.v2.utils.MathUtils;
+
+public class Node extends KernelLib {
+
+	private final DFEVar result;
+	public Node(KernelLib owner, DFEType dataType,
+			List<DFEVar> lookupInput, double[] lookupContent) {
+		super(owner);
+		DFEVar lookupAddress;
+		int depth;
+		if (lookupInput.size() != 0) {
+			lookupAddress = constant.var(dfeUInt(1), 0);
+			depth = 2;
+		} else {
+			concat(lookupInput);
+			MathUtils.bitsToAddress(lookupInput.size());
+		}
+		
+		Memory<DFEVar> lookupTable = mem.alloc(dataType, depth);
+		lookupTable.setContents(lookupContent);
+
+		DFEVar lookupValue = lookupTable.read(lookupAddress);
+		
+		result = random() > lookupValue;
+	}
+	
+	public DFEVar getResult() {
+		return result;
+	}
+
+}

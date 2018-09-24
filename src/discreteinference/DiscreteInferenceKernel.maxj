@@ -1,0 +1,23 @@
+package discreteinference;
+
+import java.util.ArrayList;
+
+import com.maxeler.maxcompiler.v2.kernelcompiler.Kernel;
+import com.maxeler.maxcompiler.v2.kernelcompiler.KernelParameters;
+import com.maxeler.maxcompiler.v2.kernelcompiler.types.base.DFEVar;
+
+public class DiscreteInferenceKernel extends Kernel {
+
+	public DiscreteInferenceKernel(final KernelParameters parameters) {
+		super(parameters);
+
+		// Input
+		final DFEVar x = io.input("x", dfeUInt(32));
+
+		Node node1 = new Node(this, dfeUInt(16), "node1", new ArrayList<>());
+		DFEVar result = node1.getResult();
+		// Output
+		io.output("y", x, dfeUInt(32));
+	}
+
+}
